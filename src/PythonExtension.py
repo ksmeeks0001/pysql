@@ -1,3 +1,5 @@
+from copy import deepcopy
+
 from jinja2.ext import Extension
 from jinja2 import nodes
 
@@ -35,7 +37,7 @@ class PythonExtension(Extension):
             if key == ('__builtins__'):
                 continue
 
-            converted_value = self.environment.jinja_convert_type(value)
+            converted_value = self.environment.jinja_convert_type(deepcopy(value))
                               
             new_node = nodes.Assign(
                 nodes.Name(key, 'store'),
