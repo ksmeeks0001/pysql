@@ -1,0 +1,9 @@
+{{ "mytable"|copy_table("mytable_backup", database='mydatabase', new_database='tmp') }}
+
+{% python %}
+origtable = "myoriginaltable"
+mynewtable = "mycopiedtable"
+database = "mydatabase"
+{% endpython %}
+
+{{ origtable|copy_table(mynewtable, database) }}

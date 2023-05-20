@@ -1,0 +1,28 @@
+{% python %}
+from datetime import datetime
+from decimal import Decimal
+
+values = ["some string", 5, None, 5.2, datetime.now(), Decimal('4.7')]
+
+me = {'firstname': 'kevin', 'dob': datetime.strptime('1975-04-16', '%Y-%m-%d').date()}
+
+{% endpython %}
+
+{% for value in values %}
+select * from mytable where col1 {{ value|where('!=') }};
+{% endfor %}
+
+{% for value in values %}
+select * from mytable where col1 {{ value|where('>') }};
+{% endfor %}
+
+select * from users where DOB {{ me.dob|where('>=') }};
+
+{% python %}
+
+from datetime import timedelta
+me['dob'] += timedelta(days=365 * 5)
+
+{% endpython %}
+
+select * from users where DOB {{ me.dob|where('>=') }};

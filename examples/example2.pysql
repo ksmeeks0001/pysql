@@ -1,0 +1,8 @@
+{% python %}
+table_name = "mytable1"
+{% endpython %}
+select * from {{ table_name }};
+{% python %}
+table_name = "mytable2"
+{% endpython %}
+select * from {{ table_name }};

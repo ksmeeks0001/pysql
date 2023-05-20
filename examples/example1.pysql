@@ -1,0 +1,9 @@
+{% python %}
+import datetime
+
+today = datetime.date.today()
+yyyymm = str(today.year)+str(today.month).zfill(2)
+table_name = f"report_{yyyymm}"
+
+{% endpython %}
+select * from {{ table_name }};

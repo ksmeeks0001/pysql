@@ -1,0 +1,10 @@
+{% python %}
+
+table_name = "my table"
+mycolumns = ["mycol1", "mycol2", "mycol3"]
+myvalues = ['hello', 5, None]
+
+{% endpython %}
+{% for value in myvalues %}
+select {{ mycolumns| columns }} from {{ table_name|sql_escape }} where mycol1 {{ value|where }};
+{% endfor %}

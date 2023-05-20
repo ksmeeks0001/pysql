@@ -1,0 +1,4 @@
+{% python %}
+mystring = "My dog's house is red"
+{% endpython %}
+select * from mytable where mycol = {{ mystring|quote }}
