@@ -154,6 +154,10 @@ select * from users where DOB >= '1980-04-14';
 ## SQL Extension
 There is also a SQL extension that will execute queries immediatly and are not part of the output. To use the SQL extension, create a configs.json file and set the PYSQL_DB_CONN_STRING key to a SQLAlchemy connection string. Rows are returned as a list of dictionaries. This can be useful when you need to use values from one table to generate SQL. For example : 
 
+```bash
+python3 pysql.py examples/example7.pysql -c configs.json
+```
+
 ```python
 {% sql rows %}select * from test.products{% endsql %}
 {% python %}
@@ -208,4 +212,3 @@ create table test.`items_Ranges` (
     index (Brand)
 );
 ```
-

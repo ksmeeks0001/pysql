@@ -37,6 +37,14 @@ def get_options():
         required=False
     )
 
+    parser.add_argument(
+        '-a',
+        '--argv',
+        help="Argument to pass to the script",
+        nargs='*',
+        type=str
+    )
+
     options = vars(parser.parse_args())
 
     return options
@@ -70,7 +78,7 @@ def jinja_convert_type(value):
     return value
 
 
-def get_pysql_env():
+def get_pysql_env(argv=[]):
     """
     return environment configured for PySQL
     """
@@ -79,7 +87,7 @@ def get_pysql_env():
     env.lstrip_blocks = True
 
     # set python execution context on environment
-    env.python_execution_context = dict()
+    env.python_execution_context = {'argv': argv}
 
     # add convert type function 
     env.jinja_convert_type = jinja_convert_type
@@ -97,18 +105,18 @@ def get_pysql_env():
 
     return env
 
-def convert(pysql):
+def convert(pysql, argv=[]):
     """
        Convert PySQL to SQL
     """
     # Create a Jinja2 environment
-    env = get_pysql_env()
+    env = get_pysql_env(argv)
 
     # Compile the Jinja2 template
     jinja_template = env.from_string(pysql)
 
     # Render the template and return the result as a string
-    return jinja_template.render()
+    return jinja_template.render(**env.python_execution_context)
     
     
 if __name__ == '__main__':
@@ -139,7 +147,7 @@ if __name__ == '__main__':
     with open(options['infile'], 'r') as pysql_file:
         pysql = pysql_file.read()
     
-    sql = convert(pysql)
+    sql = convert(pysql, options['argv'])
     
     if options['outfile']:
         with open(options['outfile'], 'w') as outfile:

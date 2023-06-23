@@ -1,0 +1,4 @@
+{% python %}
+table = input("Enter your table name: ")
+{% endpython %}
+select * from {{ table }}
