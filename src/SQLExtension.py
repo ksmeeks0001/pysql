@@ -30,7 +30,7 @@ class SQLExtension(Extension):
         result = self._sql(code)
         self.environment.python_execution_context[variable.name] = result
         converted_result = self.environment.jinja_convert_type(deepcopy(result))
-
+        
         return [
             nodes.Assign(
                 nodes.Name(variable.name, 'store'),
@@ -47,5 +47,5 @@ class SQLExtension(Extension):
         
         engine = create_engine(connstring)
         with engine.connect() as connection:
-            return list(connection.execute(text(code)))
+            return [x._asdict() for x in connection.execute(text(code))]
 

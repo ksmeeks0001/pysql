@@ -2,7 +2,7 @@
 {% python %}
 tables = []
 for row in rows:
-    tables.append('items_' + row.Product)
+    tables.append('items_' + row['Product'])
 {% endpython %}
 {% for table in tables %}
 create table test.{{ table|sql_escape }} (

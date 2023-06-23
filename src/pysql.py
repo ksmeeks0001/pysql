@@ -1,7 +1,7 @@
 import os
 import argparse
-
 import json
+
 from jinja2 import Environment, FileSystemLoader
 from jinja2 import nodes
 
@@ -62,7 +62,7 @@ def jinja_convert_type(value):
         for key, val in value.items():
             key = jinja_convert_type(key)
             tmp_dict[key] = jinja_convert_type(val)
-        value = tmp_dict
+        value = tmp_dict        
 
     elif type(value) not in (int, float, str, bytes, type(None)):
         value = str(value)
