@@ -9,7 +9,6 @@ from PythonExtension import PythonExtension
 from SQLExtension import SQLExtension
 import filters
 
-
 def get_options():
     """
     Parse arguments provided
@@ -49,35 +48,6 @@ def get_options():
 
     return options
 
-
-def jinja_convert_type(value):
-    """
-    convert all types to something that jinja can work with in templates
-    """
-    if type(value) == list:
-        for i in range(len(value)):
-            value[i] = jinja_convert_type(value[i])
-    
-    elif type(value) in (tuple, set):
-        dtype = type(value)
-        tmp_list = list(value)
-        for i in range(len(tmp_list)):
-            tmp_list[i] = jinja_convert_type(tmp_list[i])
-        value = dtype(tmp_list)
-
-    elif type(value) == dict:
-        tmp_dict = dict()
-        for key, val in value.items():
-            key = jinja_convert_type(key)
-            tmp_dict[key] = jinja_convert_type(val)
-        value = tmp_dict        
-
-    elif type(value) not in (int, float, str, bytes, type(None)):
-        value = str(value)
-
-    return value
-
-
 def get_pysql_env(argv=[]):
     """
     return environment configured for PySQL
@@ -88,9 +58,6 @@ def get_pysql_env(argv=[]):
 
     # set python execution context on environment
     env.python_execution_context = {'argv': argv}
-
-    # add convert type function 
-    env.jinja_convert_type = jinja_convert_type
 
     # register the custom tags
     env.add_extension(PythonExtension)

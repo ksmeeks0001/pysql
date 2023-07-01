@@ -14,7 +14,7 @@ def quote_wrap(value, quotes='single'):
     else:
         raise Exception("Invalid value for quotes ('single', 'double')")
 
-    return wrap + value.replace(wrap, f'\\{wrap}') + wrap
+    return wrap + str(value).replace(wrap, f'\\{wrap}') + wrap
 
 def sql_escape(value):
     """

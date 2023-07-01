@@ -1,8 +1,5 @@
-from copy import deepcopy
-
 from jinja2.ext import Extension
 from jinja2 import nodes
-
 
 class PythonExtension(Extension):
     """
@@ -23,6 +20,10 @@ class PythonExtension(Extension):
 
         # get the expression inside the tag
         body = parser.parse_statements(['name:endpython'], drop_needle=True)
+        
+        if len(body[0].nodes) > 1:
+            raise Exception("Inner nodes not allowed within python tags")
+
         code = body[0].nodes[0].data
         return self._python(code)
         
@@ -30,21 +31,10 @@ class PythonExtension(Extension):
 
         new_nodes = []
              
-        # evaluate the code and return the output
-        exec(code.strip(), self.environment.python_execution_context)
-           
-        for key, value in self.environment.python_execution_context.items():
-            if key == ('__builtins__'):
-                continue
-
-            converted_value = self.environment.jinja_convert_type(deepcopy(value))
-                              
-            new_node = nodes.Assign(
-                nodes.Name(key, 'store'),
-                nodes.Const(converted_value)
-                )
-            new_nodes.append(new_node)
+        # evaluate the code and update the context
+        exec(code.strip(), self.environment.python_execution_context)        
+        self.environment.globals.update(self.environment.python_execution_context) 
             
-        return new_nodes
+        return []
 
         

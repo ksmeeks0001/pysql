@@ -1,5 +1,4 @@
 import os
-from copy import deepcopy
 
 from jinja2.ext import Extension
 from jinja2 import nodes
@@ -25,18 +24,17 @@ class SQLExtension(Extension):
         variable = parser.parse_expression()
         
         body = parser.parse_statements(['name:endsql'], drop_needle=True)
+
+        if len(body[0].nodes) > 1:
+            raise Exception("Inner nodes not allowed within python tags")
+        
         code = body[0].nodes[0].data
         
         result = self._sql(code)
         self.environment.python_execution_context[variable.name] = result
-        converted_result = self.environment.jinja_convert_type(deepcopy(result))
+        self.environment.globals[variable.name] = result
         
-        return [
-            nodes.Assign(
-                nodes.Name(variable.name, 'store'),
-                nodes.Const(converted_result)
-                )
-            ]
+        return []
 
     
     def _sql(self, code):
